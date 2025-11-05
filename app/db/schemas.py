@@ -1,13 +1,13 @@
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel
 from datetime import datetime
 
 class LinkCreate(BaseModel):
-    url: HttpUrl
+    url: str
 
 class LinkResponse(BaseModel):
-    id: int
-    original_link: str
     slug: str
+    original_link: str
+    shortened_link: str
     createAt: datetime
     visitedCount: int
 
