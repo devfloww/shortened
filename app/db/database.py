@@ -1,6 +1,5 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
-from fastapi import HTTPException
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from sqlalchemy.orm import declarative_base
 from dotenv import load_dotenv
 import os
 
@@ -9,17 +8,17 @@ load_dotenv()
 # Globals and configs
 DATABASE_URL = str(os.getenv("DATABASE_URL"))
 Base = declarative_base()
-engine = create_engine(DATABASE_URL, connect_args={'check_same_thread': False}, pool_size=10, max_overflow=20)
-SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+engine = create_async_engine(
+    DATABASE_URL,
+    echo=True
+)
+
+AsyncSessionLocal = async_sessionmaker(
+    bind=engine,
+    expire_on_commit=False,
+    class_=AsyncSession
+)
 
 async def get_db():
-    with SessionLocal() as conn:
-        yield conn
-
-    # db = SessionLocal()
-    # try:
-    #     yield db
-    # except Exception:
-    #     raise HTTPException(500, "Internal Server Error")
-    # finally:
-    #     db.close()
+    async with AsyncSessionLocal() as session:
+        yield session
