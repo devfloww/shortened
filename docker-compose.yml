@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:latest
+    container_name: shortener_db
+    restart: always
+    environment:
+      POSTGRES_USER: fastapi_user
+      POSTGRES_PASSWORD: fastapi_pass
+      POSTGRES_DB: shortener_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    container_name: shortener_web
+    restart: always
+    depends_on:
+      - db
+    environment:
+      # DATABASE_URL used in your app/db.py
+      DATABASE_URL: postgresql+asyncpg://fastapi_user:fastapi_pass@db:5432/shortener_db
+    ports:
+      - "8000:8000"
+    command: ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+
+volumes:
+  postgres_data:
