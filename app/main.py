@@ -30,3 +30,17 @@ async def create_short_link(
         visitedCount=new_link.visitedCount
     )
 
+@app.get("/{slug}")
+async def redirect_link(
+    slug: str,
+    db_session: Session = Depends(database.get_db)
+):
+    link = crud.get_link_by_slug(db=db_session, slug=slug)
+    if not link:
+        raise HTTPException(status_code=404, detail="Link not found")
+    crud.increment_visited_count(db=db_session, link=link)
+    return RedirectResponse(url=str(link.originalLink))
+
+@app.get("/test")
+def test_endpoint():
+    return {"message": "API is working!"}
