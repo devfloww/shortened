@@ -40,7 +40,3 @@ async def redirect_link(
         raise HTTPException(status_code=404, detail="Link not found")
     crud.increment_visited_count(db=db_session, link=link)
     return RedirectResponse(url=str(link.originalLink))
-
-@app.get("/test")
-def test_endpoint():
-    return {"message": "API is working!"}
