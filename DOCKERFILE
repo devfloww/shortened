@@ -3,19 +3,17 @@ FROM python:3.11-slim
 WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONNUNBUFFERER 1
+ENV PYTHONUNBUFFERED 1
 
 COPY requirements.txt .
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     curl \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN python -m ensurepip --upgrade
-RUN python -m pip install --upgrade uv
-
-RUN uv install -r requirements.txt
+    && rm -rf /var/lib/apt/lists/* && \
+    python -m ensurepip --upgrade && \
+    python -m pip install --upgrade uv && \
+    uv sync -r requirements.txt
 
 COPY . .
 
