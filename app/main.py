@@ -6,6 +6,7 @@ from app.db import models, schemas, database
 from app import crud
 
 # Globals and Configs
+models.Base.metadata.create_all(bind=database.engine)
 app = FastAPI()
 
 @app.post("/shorten")
@@ -28,3 +29,4 @@ async def create_short_link(
         createAt=new_link.createdAt,
         visitedCount=new_link.visitedCount
     )
+
