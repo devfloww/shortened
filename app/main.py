@@ -15,7 +15,7 @@ async def lifespan(app: FastAPI):
     await database.engine.dispose()
 
 # Globals and Configs
-switchedapp = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan)
 
 @app.post("/shorten")
 async def create_short_link(
@@ -23,7 +23,7 @@ async def create_short_link(
     request: Request,
     db_session: AsyncSession = Depends(database.get_db)
 ):
-    new_link = crud.create_link(
+    new_link = await crud.create_link(
         db=db_session,
         original_link=link.url,
     )
@@ -43,7 +43,7 @@ async def redirect_link(
     slug: str,
     db_session: AsyncSession = Depends(database.get_db)
 ):
-    link = crud.get_link_by_slug(db=db_session, slug=slug)
+    link = await crud.get_link_by_slug(db=db_session, slug=slug)
     if not link:
         raise HTTPException(status_code=404, detail="Link not found")
     await crud.increment_visited_count(db=db_session, link=link)

@@ -7,11 +7,11 @@ ENV PYTHONUNBUFFERED 1
 
 COPY pyproject.toml .
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    curl \
-    && rm -rf /var/lib/apt/lists/* && \
-    python -m ensurepip --upgrade && \
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     build-essential \
+#     curl \
+#     && rm -rf /var/lib/apt/lists/* && \
+RUN python -m ensurepip --upgrade && \
     python -m pip install --upgrade uv && \
     uv sync
 
