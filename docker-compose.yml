@@ -5,8 +5,8 @@ services:
     container_name: shortened_db
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: shortened_db_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: shortened_db
     ports:
       - "5432:5432"
