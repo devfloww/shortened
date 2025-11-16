@@ -15,7 +15,7 @@ async def lifespan(app: FastAPI):
     await database.engine.dispose()
 
 # Globals and Configs
-switchedapp = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan)
 
 @app.post("/shorten")
 async def create_short_link(
