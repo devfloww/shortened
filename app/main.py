@@ -1,6 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException, Request
-from fastapi.responses import RedirectResponse, HTMLResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from contextlib import asynccontextmanager
 
@@ -17,16 +16,6 @@ async def lifespan(app: FastAPI):
 
 # Globals and Configs
 app = FastAPI(lifespan=lifespan)
-# CORS config
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Change to use envs
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-app.mount("/static", StaticFiles(directory="frontend"), name="static")
 
 @app.post("/shorten")
 async def create_short_link(
@@ -58,9 +47,5 @@ async def redirect_link(
     if not link:
         raise HTTPException(status_code=404, detail="Link not found")
     await crud.increment_visited_count(db=db_session, link=link)
-    return RedirectResponse(url=str(link.originalLink)
+    return RedirectResponse(url=str(link.originalLink))
 
-@app.get("/", response_class=HTMLResponse)
-async def root():
-    with open("frontend/index.html", "r", encoding="utf-8") as f:
-        return f.read()
