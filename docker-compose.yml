@@ -5,7 +5,7 @@ services:
     container_name: shortened_db
     restart: always
     environment:
-      POSTGRES_USER: shortened_db_user
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: shortened_db
     ports:
@@ -20,7 +20,7 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgresql+asyncpg://fastapi_user:fastapi_pass@db:5432/shortened_db
+      DATABASE_URL: postgresql+asyncpg://postgres:password@db:5432/shortened_db
     ports:
       - "8000:8000"
     command: ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]

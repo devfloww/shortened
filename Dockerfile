@@ -8,8 +8,10 @@ ENV PYTHONUNBUFFERED 1
 COPY pyproject.toml .
 
 RUN apt-get update && apt-get install -y --no-install-recommends build-essential curl && \
-     rm -rf /var/lib/apt/lists/* && \
-     curl -LsSf https://astral.sh/uv/install.sh | sh && \
+     rm -rf /var/lib/apt/lists/*
+
+RUN  curl -LsSf https://astral.sh/uv/install.sh | sh && \
+     export PATH="/root/.local/bin:$PATH" && \
      uv sync
 
 COPY . .
